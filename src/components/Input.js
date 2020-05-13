@@ -4,7 +4,8 @@ const Input = ({num, name, setInput}) => {
     const _setInput = (e) => setInput(name, e.target.value);
 
     const style = {
-        "width": "100%"
+        "width": "150px",
+        "margin": "auto"
     };
     const lableStyle = {
         "width": "40%"

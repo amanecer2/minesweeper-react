@@ -157,10 +157,12 @@ function App() {
 
             </div>
 
-            <Minesweeper
-                onCellHandler={onCellHandler}
-                minesweeper={minesweeper}
-            />
+            <CenterElement>
+                <Minesweeper
+                    onCellHandler={onCellHandler}
+                    minesweeper={minesweeper}
+                />
+            </CenterElement>
             <Modal
                 show={showModal}
                 onModal={() => setShowModal(false)}

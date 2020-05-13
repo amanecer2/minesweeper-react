@@ -128,6 +128,14 @@ export const createMinesweeper = (height = 10, width = 10) => {
 };
 
 
+/**
+ *
+ * @param {Cell[][]}minesweeper
+ * @param {number} height
+ * @param {number} width
+ * @param {Set} set
+ * @returns {Cell}
+ */
 export const revealCellHelper = (minesweeper, height, width, set = new Set()) => {
     const _cell = isInMine(minesweeper, height, width);
 
@@ -152,12 +160,13 @@ export const revealCellHelper = (minesweeper, height, width, set = new Set()) =>
 
     if (_cell.flaged) return false;
 
-    _cell.reveal()
+    _cell.reveal();
+
     return _cell;
 };
 
 /**
- *
+ * Reveal all empty places near the clicked cell
  * @param {{Cell[][]}} minesweeper
  * @param {number} height
  * @param {number} width
@@ -190,13 +199,12 @@ export const revealEmptyPlaces = (minesweeper, height, width, set = new Set()) =
 
     }
 
-    console.log(set)
-
-}
+};
 
 
 /**
  * DFS getting stack over flow when 200 * 200 and more
+ * @deprecated() DFS not efficient
  * @param minesweeper
  * @param height
  * @param width
