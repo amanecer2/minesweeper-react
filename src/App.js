@@ -78,8 +78,8 @@ function App() {
         setConfig({...config, ...options, [name]: +value})
     };
 
-    const _checkIfWon = () => {
-        if (flagsLeft === 0 && checkIfWon(minesweeper, config.mines, flagsLeft)) {
+    const _checkIfWon = async () => {
+        if (flagsLeft === 0 && await checkIfWon(minesweeper, config.mines, flagsLeft)) {
             setModalText(TEXT_YOU_WON)
             setShowModal(true)
         }
@@ -97,7 +97,8 @@ function App() {
         if (clickedCell.isMine && !isShifted && !clickedCell.flaged) {
             setModalText(TEXT_YOU_LOSE)
             setShowModal(true);
-            revealAllBooms(minesweeper)
+            const _copyMinesweeper = revealAllBooms(minesweeper);
+            setMinesweeper(_copyMinesweeper)
             return;
         }
 
@@ -127,7 +128,9 @@ function App() {
             // happy path.. shoe all 0 near by cells
             clickedCell.reveal();
             if (clickedCell.numberNearBy === 0) {
-                revealEmptyPlaces(copyMinesweeper, clickedCell.height, clickedCell.width);
+                const _copyMinesweeper = revealEmptyPlaces(copyMinesweeper, clickedCell.height, clickedCell.width);
+                setMinesweeper(_copyMinesweeper);
+                return;
             }
         }
 
