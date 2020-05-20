@@ -1,6 +1,39 @@
+
 import React from 'react';
 import Cell from './Cell';
+import {Grid} from 'react-virtualized';
 
+const Minesweeper = ({minesweeper, onCellHandler}) => {
+
+    function cellRenderer({columnIndex, key, rowIndex, style}) {
+        return (
+
+            <div key={key} style={style}>
+                <Cell
+                    onCellHandler={onCellHandler}
+                    cell={minesweeper[rowIndex][columnIndex]}
+                    className='cell'/>
+                </div>
+        );
+    }
+
+    return (
+        <Grid
+            cellRenderer={cellRenderer}
+            columnCount={minesweeper[0].length}
+            columnWidth={100}
+            height={500}
+            rowCount={minesweeper.length}
+            rowHeight={30}
+            width={window.innerWidth}
+        />
+    )
+};
+
+export default Minesweeper;
+
+
+/*
 const Minesweeper = ({minesweeper, onCellHandler}) => {
     let height = 0;
     let width = 0;
@@ -29,4 +62,4 @@ const Minesweeper = ({minesweeper, onCellHandler}) => {
     )
 };
 
-export default Minesweeper;
+*/
