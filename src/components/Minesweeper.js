@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Cell from './Cell';
+import Cell from './Cell/Cell';
 import {Grid} from 'react-virtualized';
 
 function getWidth(minesweeper) {
@@ -53,9 +53,9 @@ const Minesweeper = ({minesweeper, onCellHandler}) => {
                     width++;
                     return (<Cell
                         onCellHandler={onCellHandler}
-                        cell={column}
+                        Cell={column}
                         key={id}
-                        className='cell'/>);
+                        className='Cell'/>);
                 })
             }</div>
         )

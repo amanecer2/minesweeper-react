@@ -86,14 +86,14 @@ function App() {
     }
 
     /**
-     * Handle cell click event
+     * Handle Cell click event
      * @param {Cell} cellEvent
      */
     const onCellHandler = async (cellEvent) => {
         const copyMinesweeper = [...minesweeper];
         const clickedCell = copyMinesweeper[cellEvent.height][cellEvent.width];
 
-        // if the cell is a mine and no flag is on
+        // if the Cell is a mine and no flag is on
         if (clickedCell.isMine && !isShifted && !clickedCell.flaged) {
             setModalText(TEXT_YOU_LOSE)
             setShowModal(true);
@@ -102,7 +102,7 @@ function App() {
             return;
         }
 
-        // if the cell is flaged dont do nothing
+        // if the Cell is flaged dont do nothing
         if (!isShifted && clickedCell.flaged) {
             await _checkIfWon();
             return

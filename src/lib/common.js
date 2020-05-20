@@ -8,7 +8,7 @@ const MINE_INTERFACE = {
 };
 
 /**
- * Check if there is cell in the x y coordinate
+ * Check if there is Cell in the x y coordinate
  * @param {{Cell[][]}} minesweeper
  * @param {number} x
  * @param {number} y
@@ -19,7 +19,7 @@ export const isInMine = (minesweeper, x, y) => {
 };
 
 /**
- * Get near by mines to this cell
+ * Get near by mines to this Cell
  * @param {{Cell[][]}}  minesweeper
  * @param {number} height
  * @param {number} width
@@ -168,7 +168,7 @@ export const revealCellHelper = (minesweeper, height, width, set = new Set()) =>
 };
 
 /**
- * Reveal all empty places near the clicked cell
+ * Reveal all empty places near the clicked Cell
  * @param {{Cell[][]}} minesweeper
  * @param {number} height
  * @param {number} width
