@@ -8,8 +8,8 @@ support multi rows
 ## Available Scripts
 
 
-[logo]: https://github.com/amanecer2/minesweeper-react/blob/master/src/assets/png/screenshot.png "screen shot"
-
+screen shot
+![screen shoe](https://raw.githubusercontent.com/amanecer2/minesweeper-react/master/src/assets/png/screenshot.png)
 
 In the project directory, you can run:
 
