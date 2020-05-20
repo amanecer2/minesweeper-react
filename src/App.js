@@ -1,9 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-import styled from 'styled-components';
-
 import './App.css';
-
 
 import {
     createMinesweeper,
@@ -22,24 +19,14 @@ import Button from './components/Button';
 import Modal from './components/Modal';
 import CenterElement from './components/Center';
 
-import {hasEnoughFlagsToToggle, isCellFlaggedOrOnShift, isCellMine} from "./lib/click-cell.utils";
-
-const TEXT_YOU_LOSE = 'You lose this round!!';
-const TEXT_NO_MORE_FLAGS = 'no more flags left to use';
-const TEXT_YOU_WON = 'You won the game!';
-
-const StyleButtonStart = styled.div`
-    .start-game {
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-    }
-`;
+import {
+    hasEnoughFlagsToToggle,
+    isCellFlaggedOrOnShift,
+    isCellMine,
+    TEXT_NO_MORE_FLAGS,
+    TEXT_YOU_LOSE, TEXT_YOU_WON
+} from "./lib/click-cell.utils";
+import {StyleButtonStart} from "./styles/StyleButtonStart";
 
 function App() {
 
