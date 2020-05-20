@@ -1,8 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # minesweeper game
-support upto 400 * 400 cells (with ui lag)
+support multi rows 
 
+## style components for styling
+## react-virtualized for performance
 ## Available Scripts
 
 In the project directory, you can run:

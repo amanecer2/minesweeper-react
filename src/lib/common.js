@@ -136,16 +136,17 @@ export const createMinesweeper = (height = 10, width = 10) => {
  * @param {number} height
  * @param {number} width
  * @param {Set} set
- * @returns {Cell}
+ * @returns {Cell | null}
  */
 export const revealCellHelper = (minesweeper, height, width, set = new Set()) => {
-    const _cell = isInMine(minesweeper, height, width);
+    const _currentCell = isInMine(minesweeper, height, width);
 
-    if (!_cell) return false;
-    if (set.has(`${_cell.height}-${_cell.width}`)) return false;
+    if (!_currentCell) return null;
+    if (set.has(`${_currentCell.height}-${_currentCell.width}`)) return null;
+
     set.add(`${height}-${width}`);
 
-    if (_cell.numberNearBy > 0) {
+    if (_currentCell.numberNearBy > 0) {
         const N = isInMine(minesweeper, height - 1, width);
         const W = isInMine(minesweeper, height + 1, width);
         const E = isInMine(minesweeper, height, width - 1,);
@@ -155,16 +156,18 @@ export const revealCellHelper = (minesweeper, height, width, set = new Set()) =>
             return !cell.isMine && cell.numberNearBy === 0
         });
 
-        shouldRevel && !_cell.flaged && _cell.reveal();
+        if (shouldRevel && !_currentCell.flaged){
+            _currentCell.reveal();
+        }
 
-        return false;
+        return null;
     }
 
-    if (_cell.flaged) return false;
+    if (_currentCell.flaged) return null;
 
-    _cell.reveal();
+    _currentCell.reveal();
 
-    return _cell;
+    return _currentCell;
 };
 
 /**
@@ -179,24 +182,23 @@ export const revealEmptyPlaces = (minesweeper, height, width, set = new Set()) =
 
    const res = revealCellHelper(minesweeper, height, width, set);
 
-   if (!res) return false;
+   if (!res) return minesweeper;
 
     const getSiblingPositions = (cell) => [[cell.height - 1, cell.width], [cell.height + 1, cell.width], [cell.height, cell.width - 1], [cell.height, cell.width + 1]];
 
-    const _helper = _poss => _poss.map( p => {
+    const _revealSiblings = _siblingPositions => _siblingPositions.map( p => {
         return revealCellHelper(minesweeper, ...p, set)
     });
 
-    const queue = _helper(getSiblingPositions(res));
-
+    const queue = _revealSiblings(getSiblingPositions(res));
 
     while (queue.length) {
         const _current = queue.pop();
-        if (_current !== false) {
-            const _cel = _helper(getSiblingPositions(_current));
-            _cel.filter(x => x)
-                .forEach( x => queue.push(x))
 
+        if (_current) {
+            const _revealCells = _revealSiblings(getSiblingPositions(_current));
+            _revealCells.filter(x => x)
+                .forEach( x => queue.push(x))
         }
 
     }
@@ -204,59 +206,6 @@ export const revealEmptyPlaces = (minesweeper, height, width, set = new Set()) =
     return minesweeper;
 
 };
-
-
-/**
- * DFS getting stack over flow when 200 * 200 and more
- * @deprecated() DFS not efficient
- * @param minesweeper
- * @param height
- * @param width
- * @param set
- * @returns {boolean}
- */
-export const revealEmptyPlaces2 = (minesweeper, height, width, set = new Set()) => {
-
-    const _cell = isInMine(minesweeper, height, width);
-
-    if (!_cell) return false;
-    if (set.has(`${_cell.height}-${_cell.width}`)) return false;
-
-    if (_cell.numberNearBy > 0) {
-        const N = isInMine(minesweeper, height - 1, width);
-        const W = isInMine(minesweeper, height + 1, width);
-        const E = isInMine(minesweeper, height, width - 1,);
-        const S = isInMine(minesweeper, height, width + 1);
-
-        const shouldRevel = [N, W, E, S].filter(x => x).some(cell => {
-            return !cell.isMine && cell.numberNearBy === 0
-        });
-
-        shouldRevel && !_cell.flaged && _cell.reveal();
-
-        return false;
-    }
-
-    if (_cell.flaged) return false;
-
-
-    set.add(`${_cell.height}-${_cell.width}`);
-
-    _cell.reveal();
-
-    revealEmptyPlaces(minesweeper, height - 1, width, set);
-    revealEmptyPlaces(minesweeper, height + 1, width, set);
-    revealEmptyPlaces(minesweeper, height, width - 1, set);
-    revealEmptyPlaces(minesweeper, height, width + 1, set);
-    const queue = [isInMine(minesweeper, height - 1, width)]
-    while (queue.length) {
-        const _current = queue.pop();
-
-    }
-
-    console.log(set)
-
-}
 
 /**
  * Reveal all mines in the minesweeper

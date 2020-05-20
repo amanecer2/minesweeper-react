@@ -22,6 +22,7 @@ import Button from './components/Button';
 import Modal from './components/Modal';
 import CenterElement from './components/Center';
 
+import {hasEnoughFlagsToToggle, isCellFlaggedOrOnShift, isCellMine} from "./lib/click-cell.utils";
 
 const TEXT_YOU_LOSE = 'You lose this round!!';
 const TEXT_NO_MORE_FLAGS = 'no more flags left to use';
@@ -57,7 +58,7 @@ function App() {
 
     // at boot, init the Minesweeper
     useEffect(() => {
-        setNewMinesweeper();
+        _setNewMinesweeper();
     }, []);
 
     // add listeners on init
@@ -78,7 +79,7 @@ function App() {
         setIsShifted(false);
     };
 
-    const setNewMinesweeper = () => {
+    const _setNewMinesweeper = () => {
         setFlagsLeft(config.mines);
         const newMinesweeper = createMinesweeper(config.height, config.width, config.mines);
         const minesweeperWithMines = addMines(newMinesweeper, config.height, config.width, config.mines);
@@ -94,12 +95,31 @@ function App() {
         setConfig({...config, ...options, [name]: +value})
     };
 
+    const _showModal = text => {
+        setModalText(text);
+        setShowModal(true)
+    };
+
     const _checkIfWon = async () => {
         if (flagsLeft === 0 && await checkIfWon(minesweeper, config.mines, flagsLeft)) {
-            setModalText(TEXT_YOU_WON)
-            setShowModal(true)
+            _showModal(TEXT_YOU_WON);
         }
-    }
+    };
+
+    const _isShifted = async (clickedCell) => {
+        const modifyFlagsLeftBy = clickedCell.flaged ? 1 : -1;
+
+        // if we have enough flags than toggle
+        if (hasEnoughFlagsToToggle(flagsLeft, config, clickedCell)) {
+            setFlagsLeft(flagsLeft + modifyFlagsLeftBy);
+            clickedCell.toggleFlag();
+            await _checkIfWon();
+        } else {
+            // not enough flags and show popup
+            _showModal(TEXT_NO_MORE_FLAGS)
+        }
+    };
+
 
     /**
      * Handle Cell click event
@@ -110,36 +130,22 @@ function App() {
         const clickedCell = copyMinesweeper[cellEvent.height][cellEvent.width];
 
         // if the Cell is a mine and no flag is on
-        if (clickedCell.isMine && !isShifted && !clickedCell.flaged) {
-            setModalText(TEXT_YOU_LOSE)
-            setShowModal(true);
+        if (isCellMine(clickedCell, isShifted)) {
+            _showModal(TEXT_YOU_LOSE);
             const _copyMinesweeper = revealAllMines(minesweeper);
-            setMinesweeper(_copyMinesweeper)
+            setMinesweeper(_copyMinesweeper);
             return;
         }
 
         // if the Cell is flaged dont do nothing
-        if (!isShifted && clickedCell.flaged) {
+        if (isCellFlaggedOrOnShift(clickedCell, isShifted)) {
             await _checkIfWon();
             return
         }
-        ;
-
 
         // if shift is on
         if (isShifted) {
-            const modifyBy = clickedCell.flaged ? 1 : -1;
-
-            // if we have enough flags than toggle
-            if (!(flagsLeft + modifyBy < 0 || flagsLeft + modifyBy > config.flagsLeft)) {
-                setFlagsLeft(flagsLeft + modifyBy)
-                clickedCell.toggleFlag();
-                await _checkIfWon()
-            } else {
-                // not enough flags and show popup
-                setModalText(TEXT_NO_MORE_FLAGS);
-                setShowModal(true)
-            }
+            await _isShifted(clickedCell);
         } else {
             // happy path.. shoe all 0 near by cells
             clickedCell.reveal();
@@ -150,7 +156,7 @@ function App() {
             }
         }
 
-        setMinesweeper(copyMinesweeper)
+        setMinesweeper(copyMinesweeper);
     };
 
     return (
@@ -170,7 +176,7 @@ function App() {
                     <CenterElement>
                         <StyleButtonStart>
                             <Button className={'start-game'} text='start new game' onClick={() => {
-                                setNewMinesweeper()
+                                _setNewMinesweeper()
                             }}/>
                         </StyleButtonStart>
                     </CenterElement>

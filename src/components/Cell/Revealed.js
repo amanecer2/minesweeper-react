@@ -22,7 +22,7 @@ const StyledRevealed = styled.span`
 `;
 
 
-const Revealed = ({cell}) => {
+const Revealed = ({cell} = {}) => {
     const display = cell.numberNearBy ? cell.numberNearBy : '';
     let clazz = '';
     switch (cell.numberNearBy) {
