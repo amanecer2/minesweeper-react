@@ -9,7 +9,7 @@ import {
     checkIfWon,
     revealEmptyPlaces,
     throttle,
-    revealAllBooms
+    revealAllMines
 } from './lib/common';
 
 import Input from './components/Input';
@@ -89,7 +89,7 @@ function App() {
      * Handle cell click event
      * @param {Cell} cellEvent
      */
-    const onCellHandler = (cellEvent) => {
+    const onCellHandler = async (cellEvent) => {
         const copyMinesweeper = [...minesweeper];
         const clickedCell = copyMinesweeper[cellEvent.height][cellEvent.width];
 
@@ -97,17 +97,16 @@ function App() {
         if (clickedCell.isMine && !isShifted && !clickedCell.flaged) {
             setModalText(TEXT_YOU_LOSE)
             setShowModal(true);
-            const _copyMinesweeper = revealAllBooms(minesweeper);
+            const _copyMinesweeper = revealAllMines(minesweeper);
             setMinesweeper(_copyMinesweeper)
             return;
         }
 
         // if the cell is flaged dont do nothing
         if (!isShifted && clickedCell.flaged) {
-            _checkIfWon();
+            await _checkIfWon();
             return
-        }
-        ;
+        };
 
 
         // if shift is on
@@ -118,7 +117,7 @@ function App() {
             if (!(flagsLeft + modifyBy < 0 || flagsLeft + modifyBy > config.flagsLeft)) {
                 setFlagsLeft(flagsLeft + modifyBy)
                 clickedCell.toggleFlag();
-                _checkIfWon()
+                await _checkIfWon()
             } else {
                 // not enough flags and show popup
                 setModalText(TEXT_NO_MORE_FLAGS);

@@ -262,7 +262,7 @@ export const revealEmptyPlaces2 = (minesweeper, height, width, set = new Set()) 
  * Reveal all mines in the minesweeper
  * @param {Cell[][]} minesweeper
  */
-export const revealAllBooms = (minesweeper) => {
+export const revealAllMines = (minesweeper) => {
     for (let i = 0; i < minesweeper.length; i++) {
         for (let j = 0; j < minesweeper[1].length; j++) {
             const cell = minesweeper[i][j];

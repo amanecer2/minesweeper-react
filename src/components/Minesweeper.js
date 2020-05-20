@@ -3,6 +3,9 @@ import React from 'react';
 import Cell from './Cell';
 import {Grid} from 'react-virtualized';
 
+function getWidth(minesweeper) {
+    return minesweeper[0].length * 30 > window.innerWidth ? window.innerWidth : minesweeper[0].length * 30;
+}
 const Minesweeper = ({minesweeper, onCellHandler}) => {
 
     function cellRenderer({columnIndex, key, rowIndex, style}) {
@@ -17,15 +20,16 @@ const Minesweeper = ({minesweeper, onCellHandler}) => {
         );
     }
 
+
     return (
         <Grid
             cellRenderer={cellRenderer}
             columnCount={minesweeper[0].length}
-            columnWidth={100}
+            columnWidth={30}
             height={500}
             rowCount={minesweeper.length}
             rowHeight={30}
-            width={window.innerWidth}
+            width={getWidth(minesweeper)}
         />
     )
 };
