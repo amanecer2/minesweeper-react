@@ -1,5 +1,7 @@
 import {Cell} from './modal';
 
+import Workerize from './workerize';
+
 const MINE_INTERFACE = {
     BOOM: 1,
     SAFE: 0
@@ -199,6 +201,8 @@ export const revealEmptyPlaces = (minesweeper, height, width, set = new Set()) =
 
     }
 
+    return minesweeper;
+
 };
 
 
@@ -256,7 +260,7 @@ export const revealEmptyPlaces2 = (minesweeper, height, width, set = new Set()) 
 
 /**
  * Reveal all mines in the minesweeper
- * @param {{Cell[][]}} minesweeper
+ * @param {Cell[][]} minesweeper
  */
 export const revealAllBooms = (minesweeper) => {
     for (let i = 0; i < minesweeper.length; i++) {
@@ -267,6 +271,7 @@ export const revealAllBooms = (minesweeper) => {
             }
         }
     }
+    return minesweeper;
 };
 
 /**
@@ -274,19 +279,26 @@ export const revealAllBooms = (minesweeper) => {
  * @param {Cell[][]} minesweeper
  * @param {number} numbersOfMines
  */
-export const checkIfWon = (minesweeper, numbersOfMines, flagsLeft) => {
-    const cells = minesweeper.length * minesweeper[0].length;
-    let _cellsWithoutMines = 0;
-    for (let i = 0; i < minesweeper[0].length; i++) {
-        for (let j = 0; j < minesweeper[0].length; j++) {
-            const cell = minesweeper[i][j];
-            if (!cell.isMine && cell.revealed && !cell.flaged) {
-                _cellsWithoutMines++;
+export const checkIfWon = async (minesweeper, numbersOfMines, flagsLeft) => {
+    function _checkIfWon(minesweeper, numbersOfMines, flagsLeft) {
+        const cells = minesweeper.length * minesweeper[0].length;
+        let _cellsWithoutMines = 0;
+        for (let i = 0; i < minesweeper[0].length; i++) {
+            for (let j = 0; j < minesweeper[0].length; j++) {
+                const cell = minesweeper[i][j];
+                if (!cell.isMine && cell.revealed && !cell.flaged) {
+                    _cellsWithoutMines++;
+                }
             }
         }
+        return cells - numbersOfMines - flagsLeft === _cellsWithoutMines
     }
 
-    return cells - numbersOfMines - flagsLeft === _cellsWithoutMines
+    let worker = Workerize(`
+    export ${_checkIfWon.toString()}
+	
+`);
+    return await worker._checkIfWon(minesweeper, numbersOfMines, flagsLeft)
 };
 
 export const throttle = (func, limit) => {
