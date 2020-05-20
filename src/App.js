@@ -1,4 +1,7 @@
 import React, {useState, useEffect} from 'react';
+
+import styled from 'styled-components';
+
 import './App.css';
 
 
@@ -23,6 +26,19 @@ import CenterElement from './components/Center';
 const TEXT_YOU_LOSE = 'You lose this round!!';
 const TEXT_NO_MORE_FLAGS = 'no more flags left to use';
 const TEXT_YOU_WON = 'You won the game!';
+
+const StyleButtonStart = styled.div`
+    .start-game {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+`;
 
 function App() {
 
@@ -106,7 +122,8 @@ function App() {
         if (!isShifted && clickedCell.flaged) {
             await _checkIfWon();
             return
-        };
+        }
+        ;
 
 
         // if shift is on
@@ -151,9 +168,11 @@ function App() {
                     </CenterElement>
 
                     <CenterElement>
-                        <Button className={'start-game'} text='start new game' onClick={() => {
-                            setNewMinesweeper()
-                        }}/>
+                        <StyleButtonStart>
+                            <Button className={'start-game'} text='start new game' onClick={() => {
+                                setNewMinesweeper()
+                            }}/>
+                        </StyleButtonStart>
                     </CenterElement>
                 </div>
 
